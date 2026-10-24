@@ -1,15 +1,32 @@
-# Python
-__pycache__/
-*.py[cod]
+cat > .gitignore <<'EOF'
+# Python environments and caches
 .venv/
 venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
 
-# Environment variables
+# Secrets
 .env
+.env.*
+!.env.example
 
-# Node
-node_modules/
-dist/
+# Models and generated analysis data
+models/
+data/
+runs/
+*.pt
+*.onnx
 
-# OS
+# Videos and archives
+*.mp4
+*.avi
+*.mov
+*.mkv
+*.m4v
+*.zip
+
+# System files
 .DS_Store
+Thumbs.db
+EOF
