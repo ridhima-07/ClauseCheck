@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import LandingPage from './LandingPage';
 import UploadPage from './UploadPage';
+import ReviewPage from './ReviewPage';
 import type { CompletedAnalysis } from './api';
 
 export default function App() {
@@ -20,6 +21,7 @@ export default function App() {
     document.title = inUpload ? `ClauseCheck — ${completed ? 'Analysis ready' : 'Upload your agreement'}` : 'ClauseCheck — Review agreements before you sign';
     if (route === '#review' && !result) window.location.replace('#upload');
   }, [route, inUpload, completed, result]);
+  if (route === '#review' && result) return <ReviewPage result={result} onReset={() => {setResult(null); window.location.hash = 'upload';}}/>;
   return inUpload ? <UploadPage key={completed ? 'completed' : 'upload'} result={completed}
     onStart={() => setResult(null)}
     onComplete={data => { setResult(data); window.location.hash = 'review'; }}

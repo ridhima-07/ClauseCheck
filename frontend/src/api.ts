@@ -46,7 +46,15 @@ export function parseAnalysis(value: unknown): AnalysisResponse {
 }
 
 export async function analyzeDocument(file: File, signal: AbortSignal): Promise<AnalysisResponse> {
-  const url = (import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000').replace(/\/+$/, '');
+  const configuredUrl = import.meta.env.VITE_API_BASE_URL?.trim();
+
+  if (import.meta.env.PROD && !configuredUrl) {
+    throw new Error(
+      'ClauseCheck is not configured for analysis yet. Please try again later.'
+    );
+  }
+
+  const url = (configuredUrl || 'http://localhost:8000').replace(/\/+$/, '');
   const body = new FormData();
   // Some browsers omit MIME metadata. Set the part type; FastAPI still validates the bytes.
   body.append('file', file.type ? file : new File([file], file.name, { type: 'application/pdf' }), file.name);

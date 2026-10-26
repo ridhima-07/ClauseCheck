@@ -25,7 +25,7 @@ npm run dev
 
 Open **http://localhost:5173** (use `localhost`, not `127.0.0.1`, because the backend permits this exact origin). The API URL defaults to `http://localhost:8000`. To change it, copy `.env.example` to `.env.local`, edit `VITE_API_BASE_URL`, and restart Vite. This variable is public configuration, not a secret.
 
-Select a text-based agreement PDF and click Analyze. On success the integration confirmation screen shows the real document type, summary, grounded/unverified counts and a highlighted PDF download. The detailed review workspace is the next checkpoint.
+Select a text-based agreement PDF and click Analyze. On success, the approved review workspace displays the original filename, document type, summary, findings and manual-checking items from the backend. The PDF viewer renders the returned annotated PDF one page at a time.
 
 ## Implemented
 
@@ -46,6 +46,8 @@ Select a text-based agreement PDF and click Analyze. On success the integration 
 - `src/api.ts`: backend types, runtime response checks, upload request, PDF download.
 - `src/UploadPage.tsx`: selected file, loading/error state and request lifecycle.
 - `src/App.tsx`: navigation and in-memory result ownership.
+- `src/ReviewPage.tsx` and `src/review.css`: approved review design, real findings, filters, pagination, themes and responsive layout.
+- `src/PdfViewer.tsx`: locally bundled PDF.js worker, annotated page rendering, zoom and source focus.
 
 ## Verify with your backend
 
@@ -55,7 +57,9 @@ Select a text-based agreement PDF and click Analyze. On success the integration 
 4. Test slow responses, switching themes, long filenames, mobile widths and navigation away during processing.
 5. Reload the success screen: it should return to upload rather than inventing/restoring results.
 
-Validation here: TypeScript and production build passed; mocked request checks cover multipart bytes/field/MIME, success/unresolved contracts, malformed response rejection, HTTP errors, non-JSON failure, network failure and abort propagation. Live Gemini and browser interaction checks still need your local environment.
+Validation: TypeScript and production build passed. Browser checks with a schema-matching response and a three-page annotated PDF passed for upload-to-review, counts, filters, source focus, corrected pages, partial matches, byte-identical PDF download, both themes, mobile overflow, reset and refresh. Live Gemini analysis requires your local backend configuration.
+
+The PDF remains white in Dusk mode to preserve the original document. Source focus is a temporary outline around matching text lines and only appears for a unique match. Unresolved items are kept separate; their suggested pages are not treated as verified. A refresh intentionally clears analysis data.
 
 ## Build and deploy later
 
